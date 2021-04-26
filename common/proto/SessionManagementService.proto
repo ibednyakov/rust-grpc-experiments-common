@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package SS.SessionManagement;
+
+
+message SSUserUpdate {
+    float latitude = 1;
+    float longitude = 2;
+    uint64 locationTimestamp = 3;
+
+    enum Status {
+        INVALID = 0;
+        UNKNOWN = 1;
+        PASSIVE = 2;
+        ACTIVE = 3;
+        VISIBLE = 4;
+        // something else
+        CUSTOM1 = 10;
+        CUSTOM2 = 11;
+        CUSTOM3 = 12;
+    }
+    Status status = 5;
+}
+
+message SSRequest {
+    uint64 userId = 1;
+    uint64 msgTimestamp = 2;
+    
+    oneof optIsContinuation {
+        bool isContinuation = 3;
+    }
+    string userHash = 4;
+    SSUserUpdate startPoint = 5;
+}
+
+message SSResponse {
+    uint64 sessionId = 1;
+    enum Result {
+        INVALID = 0;
+        UNKNOWN = 1;
+        FAILURE = 2;
+        SUCCESS = 3;
+        HANDLER_NOT_FOUND = 4;
+    }
+    Result result = 2;
+    uint64 validUntil = 3;
+}
+
+message SSSubscriptionUpdate {
+    uint64 msgTimestamp = 1;
+    // TODO: specify other fields
+}
+
+// Service definition section:
+service Session {
+    rpc Open(SSRequest) returns (SSResponse);
+    rpc Close(SSRequest) returns (SSResponse);
+    rpc Update(stream SSUserUpdate) returns (stream SSSubscriptionUpdate);
+}
