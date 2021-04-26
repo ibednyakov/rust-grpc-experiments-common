@@ -1,0 +1,27 @@
+FROM rust:1.49-buster as builder
+
+RUN apt-get -qq update && apt-get -qq -y upgrade \
+    && apt-get -f -y install libprotobuf-dev libgrpc-dev protobuf-compiler
+
+# RUN USER=root cargo new --bin rust-grpc-separated-demo
+
+WORKDIR /usr/src/rust-grpc-separated-demo
+# COPY ./Cargo.toml ./Cargo.toml
+ADD ./ ./
+RUN rustup component add rustfmt \
+    && cargo build --release --bin=client 
+
+###################################################################
+FROM debian:buster
+
+ARG APP=/usr/src/app
+
+# RUN apk update \
+#     && apk add --no-cache ca-certificates tzdata \
+#     && rm -rf /var/cache/apk/* 
+
+COPY --from=builder /usr/src/rust-grpc-separated-demo/target/release/client ${APP}/client
+
+WORKDIR ${APP}
+
+CMD ["./client"]
