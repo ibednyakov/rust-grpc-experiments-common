@@ -5,6 +5,6 @@
 Cargo.lock
 
 /target/
-/client/
+#/client/
 
-/server/
+#/server/
