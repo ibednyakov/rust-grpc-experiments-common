@@ -1,4 +1,4 @@
-FROM rust:1.49-buster as builder
+FROM rust:1.55-buster as builder
 
 RUN apt-get -qq update && apt-get -qq -y upgrade \
     && apt-get -f -y install libprotobuf-dev libgrpc-dev protobuf-compiler

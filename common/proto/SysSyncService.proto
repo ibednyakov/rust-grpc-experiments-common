@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package SS.SysSyncService;
+
+import "Common.proto";
+
+
+/********************************************************************************
+* Diverse notifications from BackEnd:
+********************************************************************************/
+message BackendNotification {
+    uint64 timestamp = 1;
+
+}
+
+
+/********************************************************************************
+* Service definition
+********************************************************************************/
+service SystemSynchronization {
+    rpc Subscribe(SS.Common.UserDetailsDesc) returns (stream BackendNotification) {}
+}

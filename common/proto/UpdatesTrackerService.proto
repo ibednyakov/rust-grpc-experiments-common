@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package SS.UpdatesTrackerService;
+
+
+/********************************************************************************
+*
+********************************************************************************/
+enum SessionState {
+    Undefined = 0;
+    NotStarted = 1;
+    Inactive = 2;
+    Active = 3;
+    Interrupted = 4;
+}
+
+/********************************************************************************
+*
+********************************************************************************/
+enum ClientMovementState {
+    Unknown = 0;
+    FixedLocation = 1; // Movement is less than 1km/h (or configurable?)
+    SlowMovement = 2; // Movement is between [1km/h ; 5km/h]
+    MediumMovement = 3; // Movement speed is between [5km/h ; 20 km/h]
+    HighMovement = 4; // Movement speed is between [20 km/h ; 150km/h]
+    SuperHigh = 5; // Movement speed is higher than 150km/h
+}
+
+/********************************************************************************
+*
+********************************************************************************/
+message UserStateDesc {
+    uint64 timestamp = 1;
+    uint64 client_id = 2;
+    string session_id = 3;
+    string hash = 4;
+    SessionState session_state = 5;
+    ClientMovementState movement_state = 6;
+
+}
+
+/********************************************************************************
+*
+********************************************************************************/
+enum SystemState {
+    UnknownSystemState = 0;
+    SomeState = 1;
+}
+
+/********************************************************************************
+* 
+********************************************************************************/
+message Response {
+    uint64 timestamp = 1;
+    uint64 location_id = 2;
+    SystemState state = 3;
+
+}
+
+/********************************************************************************
+* Service definition
+********************************************************************************/
+service Tracker {
+    rpc NotifyOnce(UserStateDesc) returns (Response) {}
+    rpc EstablishUpdatesStream(stream UserStateDesc) returns (stream Response) {}
+}

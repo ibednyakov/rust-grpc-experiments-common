@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package SS.CommunicationService;
+
+import "Common.proto";
+
+/********************************************************************************
+ Simple User messaging notification
+ ********************************************************************************/
+ message UserNotification {
+    uint64 timestamp = 1;
+    string from_user_or_group_id = 2;
+    string to_user_or_group_id = 3;
+    string message = 4;
+
+}
+
+/********************************************************************************
+ Communication Service definition
+ ********************************************************************************/
+service Communication {
+    rpc Subscribe(SS.Common.UserDetailsDesc) returns (stream UserNotification) {}
+    rpc SendMessage(UserNotification) returns (UserNotification) {}
+    rpc EstablishMessageStream(stream UserNotification) returns (stream UserNotification) {}
+}

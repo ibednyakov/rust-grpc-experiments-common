@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package SS.Common;
+
+/********************************************************************************
+* UserDetailsDesc message definition
+********************************************************************************/
+message UserDetailsDesc {
+    uint64 user_id = 1;
+    string sw_ver_str = 2;
+    uint32 protocol_ver_major = 3;
+    uint32 protocol_ver_minor = 4;
+    string hash_id = 5;
+
+}
